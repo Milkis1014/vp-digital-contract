@@ -1,7 +1,7 @@
 # Current User Flow
 ### Current (Pen & Paper, Folder)
 The current contract workflow is entirely **manual**. Staffs are responsible for discussing the details with the client, writing the agreement in a contract by hand, and storing the completed document in a physical folder.
-![Current User Flow](.assets/user-flow-diagram.png)
+![Current User Flow](./assets/user-flow-diagram.png)
 
 1. **Verbal Discussion**
 	The client and the staff discuss and agree on the key booking details, including:
