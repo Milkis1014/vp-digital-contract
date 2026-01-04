@@ -1,4 +1,4 @@
-### Milestone 1: The “Digital Paper”
+## Milestone 1: The “Digital Paper”
 Interactive Prototype
 
 **Goal:** Replace the pen-and-paper form with a reactive PWA interface that handles calculations and generates PDF.
@@ -9,7 +9,7 @@ Interactive Prototype
 - **Outcome:** Staff can use the app on a tablet/phone to generate a professional PDF instead of writing it by hand.
 
 ---
-### Milestone 2: The “Persistence” Layer (Internal Caching)
+## Milestone 2: The “Persistence” Layer (Internal Caching)
 **Goal:** Solve the “storage” problem locally so staff can access past contracts on their specific device.
 - **Core Tasks:**
 	- Implement **Browser Storage (LocalStorage/IndexedDB)** logic.
@@ -19,7 +19,7 @@ Interactive Prototype
 - **Outcome:** A functional “Island” app. No server needed yet, but the “retrieval” and “modification” problems are solved for the individual user.
 
 ---
-### Milestone 3: The “Source of Truth” (Centralized API & DB)
+## Milestone 3: The “Source of Truth” (Centralized API & DB)
 **Goal:** Move from individual device storage to a shared office database so everyone sees the same data.
 - **Core Tasks:**
 	- Develop the **Relational Database** and **Backend API**.
@@ -29,7 +29,7 @@ Interactive Prototype
 - **Outcome:** The “Centralized Management System” is live. Data is now secure, shared, and backed up.
 
 ---
-### Milestone 4: The “Resort-Ready” PWA (Offline-First Optimization)
+## Milestone 4: The “Resort-Ready” PWA (Offline-First Optimization)
 **Goal:** Refine the system by adding offline capability.
 - **Core Tasks:**
 	- Convert the app into a **PWA** (Installable on Home Screen).
