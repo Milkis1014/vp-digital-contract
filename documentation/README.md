@@ -3,7 +3,7 @@
 ### Business Goal
 - To make *Villa Prescilla Booking Contracts* **easier to create, store, access, and modify**.
 
-### **Software Engineering Goal**
+### **Engineering Goal**
 - To design and implement a **centralized contract management system** with a structured database schema, intuitive UI components for dynamic document generation, and a secure API for real-time CRUD operations.
 
 ### Technical Objectives
