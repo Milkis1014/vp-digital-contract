@@ -23,7 +23,7 @@ For more details:
 *Inside the Application: Modify Contract*  
 
 5. **Select Contract**
-	- If the staff selects the “Modify Contract”,  they will see an interface that shows the files stored in the google drive, specifically the contracts to select the contract they want to modify.
+	- If the staff selects the “Modify Contract”,  they will see an interface that shows the contract files stored in the google drive to select the contract they want to modify.
 
 6. **Fetch Contract JSON**
 	- the PWA then sends a request to Google Drive to **fetch** the JSON file.
