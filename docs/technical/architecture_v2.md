@@ -1,5 +1,6 @@
 ### System Architecture Diagram
 ![architecture_v2](../assets/architecture_v2.png)
+
 This diagram shows the interaction between the client-side application and the two cloud services (Netlify and Google Drive). Netlify hosts the frontend while Google Drive serves as the storage system for the contracts. In the application, there are mainly two functions: **Data Entry and Generation**, **Modify Contract**. Each function communicates with the **Google Drive API** to either store or fetch relevant files.
 
 For more details:
