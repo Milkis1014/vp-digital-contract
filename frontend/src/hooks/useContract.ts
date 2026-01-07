@@ -6,19 +6,31 @@ export interface Amenity {
     checked: boolean;
     resorts: string[];
     price: string;
-    
+}
+
+export interface ContractData {
+  contractDate: string;
+  clientOccasion: string;
+  clientName: string;
+  clientNumber: string;
+  clientAddress: string;
+  selectedResort: string;
+  checkInDate: string;
+  checkOutDate: string;
 }
 
 export const useContract = () => {
     // 1. All state variables
-    const [contractDate, setContractDate] = useState<string>('2025-12-23');
-    const [clientOccasion, setClientOccasion] = useState<string>('');
-    const [clientName, setClientName] = useState<string>('');
-    const [clientNumber, setContactNumber] = useState<string>('');
-    const [clientAddress, setClientAddress] = useState<string>('');
-    const [selectedResort, setSelectedResort] = useState<string>('');
-    const [checkInDate, setCheckInDate] = useState<string>('2025-12-23T07:00');
-    const [checkOutDate, setCheckOutDate] = useState<string>('2025-12-23T17:00');
+    const [formData, setFormData] = useState<ContractData>({
+      contractDate: '2026-01-07',
+      clientOccasion: '',
+      clientName: '',
+      clientNumber: '',
+      clientAddress: '',
+      selectedResort: '',
+      checkInDate: '2026-12-28T07:00',
+      checkOutDate: '2026-12-28T17:00',
+    });
 
     const [amenities, setAmenities] = useState<Amenity[]>([
     { id: 1, name: 'Swimming Pool', checked: false, resorts: ['Villa Prescilla 1', 'Villa Prescilla 2'], price: '' },
@@ -30,22 +42,15 @@ export const useContract = () => {
   ]);
 
   // 2. Logic Functions
-    const updateField = (field: string, value: string) => {
-        switch (field) {
-            case 'contractDate': setContractDate(value); break;
-            case 'clientOccasion': setClientOccasion(value); break;
-            case 'clientName': setClientName(value); break;
-            case 'clientNumber': setContactNumber(value); break;
-            case 'clientAddress': setClientAddress(value); break;
-            case 'selectedResort': 
-            setSelectedResort(value); 
-            // Reset amenity selections when resort changes
-            setAmenities(prev => prev.map(a => ({ ...a, checked: false, price: '' })));
-            break;
-            case 'checkInDate': setCheckInDate(value); break;
-            case 'checkOutDate': setCheckOutDate(value); break;
-        }
-  };
+    const updateField = (field: keyof ContractData, value: string) =>{
+      setFormData(prev => ({ ...prev, [field]: value}));
+
+      if (field == 'selectedResort') {
+        // Side effect: Reset amenities
+        setAmenities(prev => prev.map(a => ({ ...a, checked: false, price: ''})));
+      }
+    };
+
 
   const toggleAmenity = (id: number): void => {
     setAmenities(prev => prev.map(a => 
@@ -59,20 +64,13 @@ export const useContract = () => {
   }
 
   const availableAmenities = useMemo(() => {
-    if (!selectedResort) return [];
-    return amenities.filter(a => a.resorts.includes(selectedResort));
-  }, [selectedResort, amenities])
+    if (!formData.selectedResort) return [];
+    return amenities.filter(a => a.resorts.includes(formData.selectedResort));
+  }, [formData.selectedResort, amenities])
 
   return {
     // State values
-    contractDate,
-    clientOccasion,
-    clientName,
-    clientNumber,
-    clientAddress,
-    selectedResort,
-    checkInDate,
-    checkOutDate,
+    ...formData,
     amenities: availableAmenities,
 
     // Functions

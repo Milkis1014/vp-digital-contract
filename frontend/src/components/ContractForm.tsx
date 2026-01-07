@@ -1,5 +1,5 @@
 import React from 'react';
-
+import type { ContractData } from '../hooks/useContract';
 interface ContractFormProps {
   data: {
     clientOccasion: string;
@@ -10,7 +10,7 @@ interface ContractFormProps {
     checkInDate: string;
     checkOutDate: string;
   };
-  updateField: (field: string, value: string) => void;
+  updateField: (field: keyof ContractData, value: string) => void;
 }
 
 export const ContractForm: React.FC<ContractFormProps> = ({ data, updateField }) => {
