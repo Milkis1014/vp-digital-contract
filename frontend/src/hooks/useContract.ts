@@ -8,11 +8,17 @@ export interface Amenity {
   price: string;
 }
 
-export interface CustomService {
-  id: number;
+export interface Service {
+  id: string;
   name: string;
-  checked: boolean;
   price: string;
+}
+
+export interface Package {
+  id: string;
+  name: string;
+  price: string;
+  inclusions: string[];
 }
 
 export interface ContractData {
@@ -84,19 +90,18 @@ export const useContract = () => {
     },
   ]);
 
-  const [customServices, setCustomServices] = useState<CustomService[]>([]);
-  const [nextCustomId, setNextCustomId] = useState(1000); // Start with high number to avoid conflicts
+  const [customServices, setCustomServices] = useState<Service[]>([]);
+  const [customPackages, setCustomPackages] = useState<Package[]>([]);
 
   // 2. Logic Functions
   const updateField = (field: keyof ContractData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-    if (field == "selectedResort") {
-      // Side effect: Reset amenities and custom services
+    if (field === "selectedResort") {
+      // Side effect: Reset amenities
       setAmenities((prev) =>
         prev.map((a) => ({ ...a, checked: false, price: "" }))
       );
-      setCustomServices([]);
     }
   };
 
@@ -115,44 +120,29 @@ export const useContract = () => {
   };
 
   // Custom Services Functions
-  const addCustomService = (onAdded?: (id: number) => void): void => {
-    const newService: CustomService = {
-      id: nextCustomId,
-      name: "",
-      checked: false,
-      price: "",
-    };
-    setCustomServices((prev) => [...prev, newService]);
-    if (onAdded) {
-      onAdded(nextCustomId);
-    }
-    setNextCustomId((prev) => prev + 1);
+  const addService = (service: Service): void => {
+    setCustomServices((prev) => [...prev, service]);
   };
 
-  const deleteCustomService = (id: number): void => {
+  const removeService = (id: string): void => {
     setCustomServices((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const toggleCustomService = (id: number): void => {
-    setCustomServices((prev) =>
-      prev.map((s) =>
-        s.id === id
-          ? { ...s, checked: !s.checked, price: !s.checked ? s.price : "" }
-          : s
-      )
-    );
+  const updateService = (id: string, service: Service): void => {
+    setCustomServices((prev) => prev.map((s) => (s.id === id ? service : s)));
   };
 
-  const updateCustomServiceName = (id: number, name: string): void => {
-    setCustomServices((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, name } : s))
-    );
+  // Custom Packages Functions
+  const addPackage = (pkg: Package): void => {
+    setCustomPackages((prev) => [...prev, pkg]);
   };
 
-  const updateCustomServicePrice = (id: number, price: string): void => {
-    setCustomServices((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, price } : s))
-    );
+  const removePackage = (id: string): void => {
+    setCustomPackages((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const updatePackage = (id: string, pkg: Package): void => {
+    setCustomPackages((prev) => prev.map((p) => (p.id === id ? pkg : p)));
   };
 
   const availableAmenities = useMemo(() => {
@@ -165,15 +155,17 @@ export const useContract = () => {
     ...formData,
     amenities: availableAmenities,
     customServices,
+    customPackages,
 
     // Functions
     updateField,
     toggleAmenity,
     updateAmenityPrice,
-    addCustomService,
-    deleteCustomService,
-    toggleCustomService,
-    updateCustomServiceName,
-    updateCustomServicePrice,
+    addService,
+    removeService,
+    updateService,
+    addPackage,
+    removePackage,
+    updatePackage,
   };
 };

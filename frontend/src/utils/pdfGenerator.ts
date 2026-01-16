@@ -1,5 +1,5 @@
 import { jsPDF } from "jspdf";
-import type { Amenity, CustomService } from "../hooks/useContract";
+import type { Amenity, Service, Package } from "../hooks/useContract";
 
 export type PDFAction = "preview" | "download";
 
@@ -12,7 +12,8 @@ interface ContractData {
   checkInDate: string;
   checkOutDate: string;
   amenities: Amenity[];
-  customServices: CustomService[];
+  customServices: Service[];
+  customPackages: Package[];
 }
 
 export const generateContractPDF = (
@@ -22,6 +23,7 @@ export const generateContractPDF = (
   const doc = new jsPDF();
   let y: number = 20;
   const margin: number = 20;
+  const lineHeight: number = 7;
 
   // Title
   doc.setFontSize(20);
@@ -32,7 +34,7 @@ export const generateContractPDF = (
   doc.setFontSize(12);
   doc.text(`Resort: ${data.selectedResort || "N/A"}`, margin, y);
   doc.text(`Check-in: ${data.checkInDate}`, margin + 118, y);
-  y += 7;
+  y += lineHeight;
   doc.text(
     `Occasion: ${data.clientOccasion || "____________________"}`,
     margin,
@@ -42,13 +44,13 @@ export const generateContractPDF = (
   y += 20;
 
   doc.text(`Client: ${data.clientName || "____________________"}`, margin, y);
-  y += 7;
+  y += lineHeight;
   doc.text(
     `Contact: ${data.clientNumber || "____________________"}`,
     margin,
     y
   );
-  y += 7;
+  y += lineHeight;
   doc.text(
     `Address: ${data.clientAddress || "____________________"}`,
     margin,
@@ -58,42 +60,67 @@ export const generateContractPDF = (
 
   // Amenities Section
   const checkedAmenities = data.amenities.filter((a) => a.checked);
-  const checkedCustomServices = data.customServices.filter((s) => s.checked);
+  let total = 0;
 
-  if (checkedAmenities.length > 0 || checkedCustomServices.length > 0) {
+  if (
+    checkedAmenities.length > 0 ||
+    data.customServices.length > 0 ||
+    data.customPackages.length > 0
+  ) {
     doc.setFontSize(14);
     doc.text("Services Availed:", margin, y);
     y += 10;
     doc.setFontSize(12);
 
-    let total = 0;
-
-    // Regular amenities
+    // Standard Amenities
     checkedAmenities.forEach((amenity) => {
       const price = parseFloat(amenity.price) || 0;
       const priceText = price > 0 ? `PHP ${price.toFixed(2)}` : "Price TBD";
 
       doc.text(`• ${amenity.name}`, margin + 5, y);
       doc.text(`${priceText}`, margin + 100, y);
-      total += parseFloat(amenity.price) || 0;
+      total += price;
 
-      y += 7;
+      y += lineHeight;
     });
 
-    // Custom services
-    checkedCustomServices.forEach((service) => {
+    // Custom Services
+    data.customServices.forEach((service) => {
       const price = parseFloat(service.price) || 0;
       const priceText = price > 0 ? `PHP ${price.toFixed(2)}` : "Price TBD";
-      const serviceName = service.name || "Custom Service";
 
-      doc.text(`• ${serviceName}`, margin + 5, y);
+      doc.text(`• ${service.name}`, margin + 5, y);
       doc.text(`${priceText}`, margin + 100, y);
-      total += parseFloat(service.price) || 0;
+      total += price;
 
-      y += 7;
+      y += lineHeight;
     });
 
-    y += 7;
+    // Custom Packages
+    data.customPackages.forEach((pkg) => {
+      const price = parseFloat(pkg.price) || 0;
+      const priceText = price > 0 ? `PHP ${price.toFixed(2)}` : "Price TBD";
+
+      // Package name and price
+      doc.text(`• ${pkg.name}`, margin + 5, y);
+      doc.text(`${priceText}`, margin + 100, y);
+      total += price;
+      y += lineHeight;
+
+      // Package inclusions (indented)
+      if (pkg.inclusions && pkg.inclusions.length > 0) {
+        pkg.inclusions.forEach((inclusion) => {
+          if (inclusion.trim()) {
+            doc.setFontSize(10);
+            doc.text(`  - ${inclusion}`, margin + 10, y);
+            y += 6;
+            doc.setFontSize(12);
+          }
+        });
+      }
+    });
+
+    y += lineHeight;
     doc.text(`Total: PHP ${total.toFixed(2)}`, margin + 88, y);
   }
 

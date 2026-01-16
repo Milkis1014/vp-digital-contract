@@ -1,10 +1,9 @@
-import React from "react";
 import { ContractForm } from "./components/ContractForm";
 import { AmenityForm } from "./components/AmenityForm";
 import { useContract } from "./hooks/useContract";
 import { generateContractPDF } from "./utils/pdfGenerator";
 
-const App: React.FC = () => {
+const App = () => {
   const {
     clientOccasion,
     clientName,
@@ -15,14 +14,16 @@ const App: React.FC = () => {
     checkOutDate,
     amenities,
     customServices,
+    customPackages,
     updateField,
     toggleAmenity,
     updateAmenityPrice,
-    addCustomService,
-    deleteCustomService,
-    toggleCustomService,
-    updateCustomServiceName,
-    updateCustomServicePrice,
+    addService,
+    removeService,
+    updateService,
+    addPackage,
+    removePackage,
+    updatePackage,
   } = useContract();
 
   const handleGeneratePDF = (action: "preview" | "download") => {
@@ -37,6 +38,7 @@ const App: React.FC = () => {
         checkOutDate,
         amenities,
         customServices,
+        customPackages,
       },
       action
     );
@@ -66,15 +68,17 @@ const App: React.FC = () => {
         {/* AMENITIES */}
         <AmenityForm
           amenities={amenities}
-          customServices={customServices}
           toggleAmenity={toggleAmenity}
           updateAmenityPrice={updateAmenityPrice}
           selectedResort={selectedResort}
-          addCustomService={addCustomService}
-          deleteCustomService={deleteCustomService}
-          toggleCustomService={toggleCustomService}
-          updateCustomServiceName={updateCustomServiceName}
-          updateCustomServicePrice={updateCustomServicePrice}
+          customServices={customServices}
+          addService={addService}
+          removeService={removeService}
+          updateService={updateService}
+          customPackages={customPackages}
+          addPackage={addPackage}
+          removePackage={removePackage}
+          updatePackage={updatePackage}
         />
 
         {/* ACTIONS */}
