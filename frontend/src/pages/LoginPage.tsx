@@ -1,26 +1,50 @@
-import { Box, Container, Typography, TextField, Button } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "../supabase/createClient"; // Make sure this path points to your supabase file
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { supabase } from "../supabase/createClient";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { session } = useAuth();
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  useEffect(() => {
+    if (session) {
+      navigate("/", { replace: true });
+    }
+  }, [session, navigate]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
+    setErrorMessage("");
+
     const { error: authError } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     });
 
     if (authError) {
-      alert("Login failed: " + authError.message);
+      setErrorMessage(authError.message);
+      setLoading(false);
     } else {
-      navigate("/");
+      const origin = location.state?.from?.pathname || "/";
+      navigate(origin, { replace: true });
     }
   };
   return (
@@ -45,6 +69,7 @@ const LoginPage = () => {
           padding: "30px",
           borderRadius: "8px",
           backgroundColor: "#fff",
+          boxShadow: 3,
         }}
       >
         <Typography
@@ -56,8 +81,10 @@ const LoginPage = () => {
         >
           Sign In
         </Typography>
+
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+
         <TextField
-          required
           id="email"
           label="Email"
           name="email"
@@ -65,7 +92,6 @@ const LoginPage = () => {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
         <TextField
-          required
           id="password"
           label="Password"
           name="password"
@@ -83,8 +109,9 @@ const LoginPage = () => {
             backgroundColor: "secondary.main",
           }}
           type="submit"
+          disabled={loading}
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </Button>
       </Box>
     </Container>
