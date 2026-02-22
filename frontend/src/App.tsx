@@ -1,6 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from "./components/Layout";
-import BuilderPage from "./pages/BuilderPage";
 import LoginPage from "./pages/LoginPage";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
@@ -18,10 +17,7 @@ const router = createBrowserRouter([
       // PROTECTED ROUTES: Only admins can enter this gate
       {
         element: <ProtectedRoute />,
-        children: [
-          { index: true, element: <HomePage /> },
-          { path: "create-contract", element: <BuilderPage /> },
-        ],
+        children: [{ index: true, element: <HomePage /> }],
       },
     ],
   },
