@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import type { Package } from "../types/contract";
 
 export interface Amenity {
   id: number;
@@ -14,13 +15,6 @@ export interface Service {
   price: string;
 }
 
-export interface Package {
-  id: string;
-  name: string;
-  price: string;
-  inclusions: string[];
-}
-
 export interface ContractData {
   contractDate: string;
   clientOccasion: string;
@@ -32,7 +26,13 @@ export interface ContractData {
   checkOutDate: string;
 }
 
-export const useContract = () => {
+interface UseContractOptions {
+  initialCheckin?: string;
+  initialCheckout?: string;
+}
+
+export const useContract = (options: UseContractOptions = {}) => {
+  const { initialCheckin = "", initialCheckout = "" } = options;
   // 1. All state variables
   const [formData, setFormData] = useState<ContractData>({
     contractDate: "2026-01-07",
@@ -41,8 +41,8 @@ export const useContract = () => {
     clientNumber: "",
     clientAddress: "",
     selectedResort: "",
-    checkInDate: "2026-12-28T07:00",
-    checkOutDate: "2026-12-28T17:00",
+    checkInDate: initialCheckin,
+    checkOutDate: initialCheckout,
   });
 
   const [amenities, setAmenities] = useState<Amenity[]>([
@@ -100,7 +100,7 @@ export const useContract = () => {
     if (field === "selectedResort") {
       // Side effect: Reset amenities
       setAmenities((prev) =>
-        prev.map((a) => ({ ...a, checked: false, price: "" }))
+        prev.map((a) => ({ ...a, checked: false, price: "" })),
       );
     }
   };
@@ -110,8 +110,8 @@ export const useContract = () => {
       prev.map((a) =>
         a.id === id
           ? { ...a, checked: !a.checked, price: !a.checked ? a.price : " " }
-          : a
-      )
+          : a,
+      ),
     );
   };
 

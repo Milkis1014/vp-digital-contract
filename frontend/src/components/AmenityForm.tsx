@@ -1,4 +1,5 @@
-import type { Amenity, Service, Package } from "../hooks/useContract";
+import type { Amenity, Service } from "../hooks/useContract";
+import type { Package } from "../types/contract";
 import { AddServiceButton } from "./AddServiceButton";
 import { AddPackage } from "./AddPackage";
 
